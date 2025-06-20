@@ -3,9 +3,12 @@ package lt.esdc.texts.parser;
 import lt.esdc.texts.composite.TextComponent;
 import lt.esdc.texts.exception.TextParseException;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SentenceParser extends AbstractParser {
-    // Regex to split by lexemes (words, punctuation), keeping the delimiters
-    private static final String LEXEME_REGEX = "\\s+";
+    private static final Pattern LEXEME_PATTERN = Pattern.compile("[^\\s]+");
+
 
     public SentenceParser(AbstractParser nextParser) {
         super(nextParser);
@@ -13,10 +16,11 @@ public class SentenceParser extends AbstractParser {
 
     @Override
     public void parse(TextComponent component, String text) throws TextParseException {
-        String[] lexemes = text.split(LEXEME_REGEX);
-        for (String lexemeText : lexemes) {
+        Matcher matcher = LEXEME_PATTERN.matcher(text);
+        while (matcher.find()) {
+            String lexemeText = matcher.group();
             if (nextParser != null) {
-                // The LexemeParser will create and add the final leaf components
+                // Pass the found lexeme (which could be "word" or "13++" or "+") to the next parser
                 nextParser.parse(component, lexemeText);
             }
         }
