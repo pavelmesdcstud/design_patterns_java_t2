@@ -76,7 +76,6 @@ public class InfixToPostfixConverter {
             prevToken = token;
         }
 
-        // FIX 1: Robustness check for mismatched '(' at the end
         while (!stack.isEmpty()) {
             String top = stack.pop();
             if (top.equals("(")) {

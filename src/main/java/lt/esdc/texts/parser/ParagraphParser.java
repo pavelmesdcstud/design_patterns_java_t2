@@ -6,7 +6,6 @@ import lt.esdc.texts.composite.TextComposite;
 import lt.esdc.texts.exception.TextParseException;
 
 public class ParagraphParser extends AbstractParser {
-    // Regex to split by sentences, keeping delimiters
     private static final String SENTENCE_REGEX = "(?<=[.?!…])\\s+";
 
     public ParagraphParser(AbstractParser nextParser) {

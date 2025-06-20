@@ -20,7 +20,6 @@ public class SentenceParser extends AbstractParser {
         while (matcher.find()) {
             String lexemeText = matcher.group();
             if (nextParser != null) {
-                // Pass the found lexeme (which could be "word" or "13++" or "+") to the next parser
                 nextParser.parse(component, lexemeText);
             }
         }

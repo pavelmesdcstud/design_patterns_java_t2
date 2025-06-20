@@ -15,13 +15,9 @@ import java.util.regex.Pattern;
 public class LexemeParser extends AbstractParser {
     private static final Logger logger = LogManager.getLogger(LexemeParser.class);
 
-    // This pattern is now only used as a fallback for non-expressions.
     private static final Pattern LEXEME_PARTS_PATTERN = Pattern.compile("^([(\"'“]*)(\\S+?)([.,!?'\"”);:-]*)$");
 
-    // --- CORRECTED REGEXES ---
-    // A bitwise expression MUST contain a bitwise operator.
     private static final String BITWISE_EXPRESSION_REGEX = ".*[&|^~<>].*";
-    // An arithmetic expression MUST contain an arithmetic operator.
     private static final String ARITHMETIC_EXPRESSION_REGEX = ".*[+\\-*/].*";
 
     private final ExpressionCalculator arithmeticCalculator = new ArithmeticExpressionCalculator();
@@ -29,7 +25,6 @@ public class LexemeParser extends AbstractParser {
 
     @Override
     public void parse(TextComponent component, String text) {
-        // --- CORRECTED CONTROL FLOW (if-else if-else) ---
         if (text.matches(BITWISE_EXPRESSION_REGEX)) {
             try {
                 String result = bitwiseCalculator.calculate(text);
@@ -50,8 +45,6 @@ public class LexemeParser extends AbstractParser {
             }
         }
 
-        // If we reached here, the lexeme is NOT a valid expression or failed parsing.
-        // Fall back to dissecting it into word/punctuation parts.
         Matcher matcher = LEXEME_PARTS_PATTERN.matcher(text);
         if (!matcher.matches()) {
             if (!text.isBlank()) {
@@ -65,7 +58,9 @@ public class LexemeParser extends AbstractParser {
         String trailingPunctuation = matcher.group(3);
 
         if (!leadingPunctuation.isEmpty()) {
-            component.add(Lexeme.punctuation(leadingPunctuation));
+            for (char p : leadingPunctuation.toCharArray()) {
+                component.add(Lexeme.punctuation(String.valueOf(p)));
+            }
         }
 
         if (!corePart.isEmpty()) {
@@ -73,7 +68,9 @@ public class LexemeParser extends AbstractParser {
         }
 
         if (!trailingPunctuation.isEmpty()) {
-            component.add(Lexeme.punctuation(trailingPunctuation));
+            for (char p : trailingPunctuation.toCharArray()) {
+                component.add(Lexeme.punctuation(String.valueOf(p)));
+            }
         }
     }
 }

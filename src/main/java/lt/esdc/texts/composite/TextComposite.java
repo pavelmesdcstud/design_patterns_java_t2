@@ -8,7 +8,6 @@ public class TextComposite implements TextComponent {
     private final ComponentType type;
     private final List<TextComponent> components = new ArrayList<>();
 
-    // Punctuation that should not have a space before it.
     private static final Set<String> NO_SPACE_BEFORE = Set.of(".", ",", "!", "?", ";", ":", ")", "...");
     // Punctuation that should not have a space after it.
     private static final Set<String> NO_SPACE_AFTER = Set.of("(", "“", "\"");
